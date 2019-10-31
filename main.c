@@ -59,12 +59,12 @@ void put_sp(char* pArr, int pN)
 /**************************** main() ******************************/
 int main()
 {
-	FILE *input = fopen("C:\\Users\\dmitr\\Desktop\\ÏßÂÓ\\3 ÑÅÌ\\ËÐ_3 ÏßÂÓ\\LAB_3_PLHL\\LAB_3_PLHL\\data.txt", "rt");
+	FILE *input = fopen("C:\\Users\\dmitr\\Desktop\\ÏßÂÓ\\3 ÑÅÌ\\ËÐ_3 ÏßÂÓ\\LAB_3_PLHL\\LAB_3_PLHL\\data_0.txt", "rt");
 
 	char* clp;		//clipboard
 	char* spaces;	//
 	short N;		//size of clp 
-	short delta;	//
+	short delta = -1;	//
 	short numsp;	//number of spaces
 
 	if (input == NULL)
@@ -83,7 +83,7 @@ int main()
 	else rewind(input);
 
 	printf("Add the delta\n");
-	scanf("%hu", delta);
+	scanf("%i", delta);
 	if (delta < 0)
 	{
 		printf("ERROR_3: delta must be > 0");
