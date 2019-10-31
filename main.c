@@ -64,7 +64,7 @@ int main()
 	char* clp;		//clipboard
 	char* spaces;	//
 	short N;		//size of clp 
-	short delta = -1;	//
+	int delta = -1;	//
 	short numsp;	//number of spaces
 
 	if (input == NULL)
@@ -82,7 +82,7 @@ int main()
 	}
 	else rewind(input);
 
-	printf("Add the delta\n");
+	printf("Add the delta: ");
 	scanf("%i", delta);
 	if (delta < 0)
 	{
