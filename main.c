@@ -8,7 +8,7 @@
 * File Name    :main.c                                            *
 * Language     :C MVS 2017                                        *
 * Programmers  :Dmitry Volkov, Alexey Tolochny                    *
-* Group        :Ì3Î-208Á-18                                       *
+* Group        :M3O-208B-18                                       *
 * Modified by  :Dmitry Volkov                                     *
 * Created      :18.10.19                                          *
 * Last Revision:31.10.19                                          *
@@ -22,8 +22,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<locale.h>
+#include<string.h>
 
-int NMAX = 100;
 int i = 0;	//counter
 /*************************** prototypes ***************************/
 //determine of max line
@@ -41,9 +41,7 @@ int dmxline(FILE* in)
 		while ((dc != '\n') && (!feof(in)))
 		{
 			dc = fgetc(in);
-			//if ((dc == '\n') || (feof(in))) break;
 			if (dc == '\t')	dtemp += 5;
-
 			dtemp++;
 		}
 		dtemp--;
@@ -61,18 +59,41 @@ void put_sp(char* pArr, int pN)
 {
 	for (i = 0; i < pN; i++) pArr[i] = ' ';
 }
+//swap \t into spaces
+void sw_tab(char* sArr)
+{
+	int g;
+	int ei = 0;
+	int tabi = 0;
+	int end_of_search = 0;
+	while (end_of_search != 1)
+	{
+		while (sArr[ei + 1] != '\0') ei++;
+		while ((sArr[tabi] != '\t') && (sArr[tabi] != '\0')) tabi++;
+		if (tabi > ei) end_of_search = 1;
+		for (int i = ei; i > tabi; i--) sArr[i + 4] = sArr[i];
+		if (end_of_search != 1)
+		{
+			g = tabi;
+			for (int i = 0; i < 5; i++)
+			{
+				sArr[g] = ' ';
+				g++;
+			}
+		}
+	}
+}
 /**************************** main() ******************************/
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	
-	FILE *input = fopen("C:\\Users\\dmitr\\Desktop\\ÏßÂÓ\\3 ÑÅÌ\\ËÐ_3 ÏßÂÓ\\LAB_3_PLHL\\LAB_3_PLHL\\data_0.txt", "rt");
+	FILE *input = fopen("C:\\Users\\dmitr\\Desktop\\ÏßÂÓ\\3 ÑÅÌ\\ËÐ_3 ÏßÂÓ\\LAB_3 PLHL\\LAB_3 PLHL\\data.txt", "rt");
 
 	char* clp;		//clipboard
 	char* spaces;	//
-	int N;		//size of clp 
-	int delta = 5;		//
-	int numsp;	//number of spaces
+	int N;			//size of clp 
+	int delta = 5;	//
+	int numsp;		//number of spaces
 
 	if (input == NULL)
 	{
@@ -80,7 +101,6 @@ int main()
 		system("pause");
 		return 1;
 	}
-
 	if (fgetc(input) == EOF)
 	{
 		printf("ERROR_2: file is empty");
@@ -88,51 +108,47 @@ int main()
 		return 2;
 	}
 
-	//printf("Add the delta: ");
-	//scanf("%i", &delta);
-	//if (delta < 0)
-	//{
-	//	printf("ERROR_3: delta must be > 0");
-	//	system("pause");
-	//	return 3;
-	//}
-
+	printf("Add the delta: ");
+	scanf("%i", &delta);
+	printf("delta = %i\n", delta);
+	if (delta <= 0)
+	{
+		printf("ERROR_3: delta must be > 0\n");
+		system("pause");
+		return 3;
+	}
+	if (delta == 1) delta++;
 	rewind(input);
 
 	N = dmxline(input);
 	N = N + delta;
-
 	rewind(input);
 
 	clp = malloc(N);
 	spaces = malloc(N);
-
 	do
 	{
 		cler_line(clp, N);
 		cler_line(spaces, N);
 
 		fgets(clp, N, input);
-		clp[strlen(clp) - 1] = '\0';
-		if (clp[0] == '\t')
-		{
-			clp[0] = ' ';
-			clp = strcat("    ", clp);
-		}
+		sw_tab(clp);
+		if (!feof(input))
+			for (i = 0; i < N; i++)
+				if (clp[i] == '\n')
+					clp[i] = '\0';
+
 		numsp = N - strlen(clp);
 		numsp = numsp / 2;
-		put_sp(spaces, numsp);
-
-		clp = strcat(spaces, clp);
-		spaces = malloc(N);
-		cler_line(spaces, N);
-		put_sp(spaces, numsp);
-		clp = strcat(clp, spaces);
-		if (strlen(clp) != N) clp = strcat(clp, " ");
-
-		printf("%s\n", clp);
+		if (numsp != 0)
+		{
+			put_sp(spaces, numsp);
+			printf("%s", spaces);
+			printf("%s", clp);
+			printf("%s\n", spaces);
+		}
+		else printf("%s", clp);
 	} while (!feof(input));
-
 	fclose(input);
 
 	system("pause");
